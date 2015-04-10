@@ -1,0 +1,13 @@
+doctype
+html(lang="en")
+  head
+    script(src = '/js/main.js')
+    link(rel='stylesheet', href='/css/style.css')
+  body
+    -var x = "/../backend/save.php";
+    -var input = {"yes":{"type":"button","value":"1"},"no":{"type":"button","value":"0"}};
+    form(id="data", method="POST", action=x)
+      ul
+        each val, index in input
+          li
+            input(name=index,type=val.type, value=val.value)
