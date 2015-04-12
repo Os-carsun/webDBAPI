@@ -10,7 +10,7 @@ dbConfig = {
     {
       "name":"test",
       "row":[
-        {"name":"id","type":"INTEGER","setting":"PRIMARY KEY ASC"},
+        {"name":"ID","type":"INTEGER","setting":"PRIMARY KEY ASC"},
         {"name":"todo","type":"TEXT","setting":""},
         {"name":"date","type":"DATETIME","setting":""},
       ]
@@ -18,7 +18,7 @@ dbConfig = {
     {
       "name":"test2",
       "row":[
-        {"name":"id","type":"INTEGER","setting":"PRIMARY KEY ASC"},
+        {"name":"ID","type":"INTEGER","setting":"PRIMARY KEY ASC"},
         {"name":"todo","type":"TEXT","setting":""},
         {"name":"date","type":"DATETIME","setting":""},
       ]
@@ -39,6 +39,7 @@ html5rocks.webdb.onSuccess = function(tx, r) {
   // re-render the data.
   // loadTodoItems is defined in Step 4a
   // html5rocks.webdb.getAllTodoItems(loadTodoItems);
+   html5rocks.webdb.selectData(loadTodoItems,"test");
 }
 html5rocks.webdb.createTable = function(dbConfig) {
   var db = html5rocks.webdb.db;
@@ -86,8 +87,9 @@ html5rocks.webdb.insertData = function(data) {
 html5rocks.webdb.selectData = function(renderFunc,from){
   var db = html5rocks.webdb.db;
   db.transaction(function(tx) {
-    tx.executeSql("SELECT * FROM "+from, [], renderFunc,
-        html5rocks.webdb.onError);
+    var s = "SELECT * FROM "+from;
+    console.log(s);
+    tx.executeSql(s, [], renderFunc,html5rocks.webdb.onError);
   });
 }
 html5rocks.webdb.deleteTodo = function(item,table) {
@@ -99,4 +101,20 @@ html5rocks.webdb.deleteTodo = function(item,table) {
     });
 }
 
+function loadTodoItems(tx, rs) {
+  var rowOutput = "";
+  // var todoItems = document.getElementById("todoItems");
+  // console.log(rs.rows.item(2));
+  for (var i=0; i < rs.rows.length; i++) {
+    console.log(rs.rows.item(i));
+  }
 
+  // todoItems.innerHTML = rowOutput;
+}
+
+function init(){
+  html5rocks.webdb.open(dbConfig);
+  html5rocks.webdb.createTable(dbConfig);
+  html5rocks.webdb.insertData(testData);
+  html5rocks.webdb.selectData(loadTodoItems,"test");
+}
