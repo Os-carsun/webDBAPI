@@ -1,6 +1,7 @@
 doctype
 html(lang="en")
   head
+    script(src = 'js/webdb.js')
     script(src = 'js/main.js')
     link(rel='stylesheet', href='css/style.css')
   body
@@ -10,4 +11,4 @@ html(lang="en")
       ul
         each val, index in input
           li
-            input(name=index,type=val.type, value=val.value)
+            input(name=index,type=val.type, value=val.value, onclick='addValue('+val.value+')')
