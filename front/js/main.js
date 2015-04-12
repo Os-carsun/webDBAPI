@@ -55,7 +55,7 @@ html5rocks.webdb.createTable = function(dbConfig) {
   })
 }
 
-html5rocks.webdb.addTodo = function(data) {
+html5rocks.webdb.insertData = function(data) {
   var db = html5rocks.webdb.db;
   db.transaction(function(tx){
     var addedOn = new Date();
@@ -82,3 +82,21 @@ html5rocks.webdb.addTodo = function(data) {
         html5rocks.webdb.onError);
    });
 }
+
+html5rocks.webdb.selectData = function(renderFunc,from){
+  var db = html5rocks.webdb.db;
+  db.transaction(function(tx) {
+    tx.executeSql("SELECT * FROM "+from, [], renderFunc,
+        html5rocks.webdb.onError);
+  });
+}
+html5rocks.webdb.deleteTodo = function(item,table) {
+  var db = html5rocks.webdb.db;
+  db.transaction(function(tx){
+    tx.executeSql("DELETE FROM "+table+" WHERE "+item.col+"=?", [item.value],
+        html5rocks.webdb.onSuccess,
+        html5rocks.webdb.onError);
+    });
+}
+
+
