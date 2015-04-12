@@ -1,10 +1,10 @@
 doctype
 html(lang="en")
   head
-    script(src = '/js/main.js')
-    link(rel='stylesheet', href='/css/style.css')
+    script(src = 'js/main.js')
+    link(rel='stylesheet', href='css/style.css')
   body
-    -var x = "/../backend/save.php";
+    -var x = "../backend/save.php";
     -var input = {"yes":{"type":"button","value":"1"},"no":{"type":"button","value":"0"}};
     form(id="data", method="POST", action=x)
       ul
