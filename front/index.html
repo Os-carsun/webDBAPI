@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script type="application/javascript" src="js/webdb.js"></script>
-    <script type="application/javascript" src="js/sql.js"></script>
+    <script src="js/webdb.js"></script>
     <script type="application/javascript" src="http://l2.io/ip.js?var=myip"></script>
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <form>
+    <form id="data" method="POST" action="../backend/save.php">
       <ul>
         <li>
-          <input name="yes" type="button" value="1.2" onclick="addValue(1.2)">
+          <input name="yes" type="button" value="1" onclick="addValue(1)">
         </li>
         <li>
-          <input name="no" type="button" value="0.0" onclick="addValue(0.0)">
+          <input name="no" type="button" value="0" onclick="addValue(0)">
         </li>
       </ul>
     </form>

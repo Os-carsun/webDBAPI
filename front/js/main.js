@@ -1,9 +1,9 @@
 function addValue (value) {
   var data = {"table":"test","col":["todo"],"value":[]};
+ 
 
   data.value.push(value)
   html5rocks.webdb.insertData(data);
-
   if( html5rocks.webdb.count.ID >= 100 ){
     html5rocks.webdb.calCount("test","id",null);
     html5rocks.webdb.calCount("test","todo"," todo=1.0 ");
@@ -29,5 +29,4 @@ function doajax (object) {
   xmlhttp.open("POST", "../backend/save.php");
   xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xmlhttp.send("data="+JSON.stringify(object));
-  // console.log("message");
 }
