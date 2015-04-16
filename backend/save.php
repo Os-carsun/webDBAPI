@@ -20,7 +20,7 @@ if( isset($_POST['data']) ){
 	$ip = $data_string->{'ip'};
 	$rate = $data_string->{'rate'};
 	$times = $data_string->{'times'};
-	$insertStmt->execute();
+	// $insertStmt->execute();
 	// echo $ip;
 }else{
 	while ($row = $queryStmt->fetch()) {

@@ -1,14 +1,15 @@
 doctype
 html(lang="en")
   head
-    script(src = 'js/webdb.js')
+    script(type="application/javascript", src = 'js/webdb.js')
+    script(type="application/javascript", src="js/sql.js")
     script(type="application/javascript", src="http://l2.io/ip.js?var=myip")
     script(src = 'js/main.js')
     link(rel='stylesheet', href='css/style.css')
   body
     -var x = "../backend/save.php";
-    -var input = {"yes":{"type":"button","value":"1"},"no":{"type":"button","value":"0"}};
-    form(id="data", method="POST", action=x)
+    -var input = {"yes":{"type":"button","value":"1.2"},"no":{"type":"button","value":"0.0"}};
+    form()
       ul
         each val, index in input
           li
