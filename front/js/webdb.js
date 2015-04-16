@@ -1,7 +1,9 @@
 var html5rocks = {};
 html5rocks.webdb = {};
 html5rocks.webdb.db = null;
-dbConfig = {
+html5rocks.webdb.result=[];
+html5rocks.webdb.count=[];
+var dbConfig = {
   "name":"Test",
   "version":1,
   "description":"blahblah",
@@ -93,7 +95,7 @@ html5rocks.webdb.selectData = function(renderFunc,from){
     tx.executeSql(s, [], renderFunc,html5rocks.webdb.onError);
   });
 }
-html5rocks.webdb.deleteTodo = function(item,table) {
+html5rocks.webdb.delete = function(item,table) {
   var db = html5rocks.webdb.db;
   db.transaction(function(tx){
     tx.executeSql("DELETE FROM "+table+" WHERE "+item.col+"=?", [item.value],
@@ -101,18 +103,35 @@ html5rocks.webdb.deleteTodo = function(item,table) {
         html5rocks.webdb.onError);
     });
 }
-
+html5rocks.webdb.calCount = function (table,col,where) {
+	var db = html5rocks.webdb.db;
+  db.transaction(function(tx){
+  	if(where!=null)
+  		whereS = " WHERE"+where;
+  	else
+  		whereS ="";
+  	console.log(whereS);
+    tx.executeSql("SELECT COUNT("+col+") As c FROM "+table+whereS,
+    	[],function (tx, r) {
+      		html5rocks.webdb.count[col]=r.rows.item(0).c;
+    			}
+        )
+    });
+}
 function loadTodoItems(tx, rs) {
   var rowOutput = "";
-  // var todoItems = document.getElementById("todoItems");
-  // console.log(rs.rows.item(2));
   for (var i=0; i < rs.rows.length; i++) {
     console.log(rs.rows.item(i));
   }
-
-  // todoItems.innerHTML = rowOutput;
+  html5rocks.webdb.calCount("test","ID",null)
 }
-
+function putResultInArray(tx, rs) {
+  var rowOutput = "";
+  html5rocks.webdb.result=[];
+  for (var i=0; i < rs.rows.length; i++) {
+    html5rocks.webdb.result.push(rs.rows.item(i));
+  }
+}
 function init(){
   html5rocks.webdb.open(dbConfig);
   html5rocks.webdb.createTable(dbConfig);
