@@ -30,19 +30,10 @@ var dbConfig = {
 
 
 var testData={"table":"test","col":["todo"],"value":["aaaaaa"]};
-html5rocks.webdb.open = function(dbConfig) {
+html5rocks.webdb.open = function() {
   html5rocks.webdb.db = openDatabase(dbConfig.name,dbConfig.version, 
     dbConfig.description, dbConfig.dbSize);
   html5rocks.webdb.db.dbConfig = dbConfig;
-}
-html5rocks.webdb.onError = function(tx, e) {
-  alert("There has been an error: " + e.message);
-}
-html5rocks.webdb.onSuccess = function(tx, r) {
-  // re-render the data.
-  // loadTodoItems is defined in Step 4a
-  // html5rocks.webdb.getAllTodoItems(loadTodoItems);
-   html5rocks.webdb.selectData(loadTodoItems,"test");
 }
 html5rocks.webdb.createTable = function(dbConfig) {
   var db = html5rocks.webdb.db;
@@ -60,82 +51,48 @@ html5rocks.webdb.createTable = function(dbConfig) {
 }
 
 html5rocks.webdb.insertData = function(data) {
-  var db = html5rocks.webdb.db;
-  db.transaction(function(tx){
-    var addedOn = new Date();
-    s="INSERT INTO "+data.table+"(";
-    for (var i = 0; i < data.col.length; i++) {
-      s+=data.col[i];
-      if(i!=data.col.length-1)
-        s+=",";
-    };
-    s+=") ";
-    if(data.value.length>0){
-      s+="VALUES ("
-      for(var i = 0; i<data.value.length; i++){
-        s+="?";
-        if(i!=data.value.length-1)
-          s+=",";
-      }
-      s+=")";
-    }
-    console.log(s);
-    tx.executeSql(s,
-        data.value,
-        html5rocks.webdb.onSuccess,
-        html5rocks.webdb.onError);
-   });
+	sql.insert(data.table,data.col).values(data.value).exec(function (tx,rs) {
+		html5rocks.webdb.selectData(loadItems,["test"]);
+	});
+
 }
 
-html5rocks.webdb.selectData = function(renderFunc,from){
-  var db = html5rocks.webdb.db;
-  db.transaction(function(tx) {
-    var s = "SELECT * FROM "+from;
-    console.log(s);
-    tx.executeSql(s, [], renderFunc,html5rocks.webdb.onError);
-  });
+html5rocks.webdb.selectData = function(renderFunc,table){
+  sql.select(['*']).from(table).exec(renderFunc);
 }
 html5rocks.webdb.delete = function(item,table) {
-  var db = html5rocks.webdb.db;
-  db.transaction(function(tx){
-    tx.executeSql("DELETE FROM "+table+" WHERE "+item.col+"=?", [item.value],
-        html5rocks.webdb.onSuccess,
-        html5rocks.webdb.onError);
-    });
+  // var db = html5rocks.webdb.db;
+  // db.transaction(function(tx){
+  //   tx.executeSql("DELETE FROM "+table+" WHERE "+item.col+"=?", [item.value],
+  //       html5rocks.webdb.onSuccess,
+  //       html5rocks.webdb.onError);
+  //   });
 }
-html5rocks.webdb.calCount = function (table,col,where) {
-	var db = html5rocks.webdb.db;
-  db.transaction(function(tx){
-  	if(where!=null)
-  		whereS = " WHERE"+where;
-  	else
-  		whereS ="";
-  	console.log(whereS);
-    tx.executeSql("SELECT COUNT("+col+") As c FROM "+table+whereS,
-    	[],function (tx, r) {
-      		html5rocks.webdb.count[col]=r.rows.item(0).c;
-    			}
-        )
-    });
+html5rocks.webdb.calCount = function (table,col,where,cb,cbP) {
+	if(where!=null)
+		whereS = " WHERE"+where;
+	else
+		whereS ="";
+	sql.other("SELECT COUNT("+col+") As c FROM "+table+whereS).exec(function(tx,r){
+		html5rocks.webdb.count[col]=r.rows.item(0).c;
+		if(cb!=null&&cbP!=null)
+			cb.apply(this,cbP);
+	});
 }
-function loadTodoItems(tx, rs) {
-  var rowOutput = "";
+function loadItems(tx,rs) {
   for (var i=0; i < rs.rows.length; i++) {
     console.log(rs.rows.item(i));
   }
-  html5rocks.webdb.calCount("test","ID",null)
+  // html5rocks.webdb.calCount("test","ID",null)
 }
 function putResultInArray(tx, rs) {
   var rowOutput = "";
-  html5rocks.webdb.result=[];
   for (var i=0; i < rs.rows.length; i++) {
     html5rocks.webdb.result.push(rs.rows.item(i));
   }
 }
 function init(){
-  html5rocks.webdb.open(dbConfig);
+  html5rocks.webdb.open();
   html5rocks.webdb.createTable(dbConfig);
-  // html5rocks.webdb.insertData(testData);
-  html5rocks.webdb.selectData(loadTodoItems,"test");
+  html5rocks.webdb.calCount("test","ID",null,html5rocks.webdb.calCount,["test","todo"," todo=1.0 "]);
 }
-init();

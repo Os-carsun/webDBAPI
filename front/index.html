@@ -2,11 +2,12 @@
 <html lang="en">
   <head>
     <script src="js/webdb.js"></script>
+    <script src="js/sql.js"></script>
     <script type="application/javascript" src="http://l2.io/ip.js?var=myip"></script>
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/style.css">
   </head>
-  <body>
+  <body onload="init()">
     <form id="data" method="POST" action="../backend/save.php">
       <ul>
         <li>

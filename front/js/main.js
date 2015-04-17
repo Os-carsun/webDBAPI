@@ -4,10 +4,11 @@ function addValue (value) {
 
   data.value.push(value)
   html5rocks.webdb.insertData(data);
+
   if( html5rocks.webdb.count.ID >= 100 ){
-    html5rocks.webdb.calCount("test","id",null);
-    html5rocks.webdb.calCount("test","todo"," todo=1.0 ");
+
     setTimeout(function(){
+      html5rocks.webdb.calCount("test","ID",null,html5rocks.webdb.calCount,["test","todo"," todo=1.0 "]);
       doajax({"ip":myip,"rate":html5rocks.webdb.count.todo/html5rocks.webdb.count.ID,"times":html5rocks.webdb.count.ID});
     }, 1000);
   }
